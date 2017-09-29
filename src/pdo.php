@@ -2,6 +2,7 @@
 
 // supported DB types: 'sqlite', 'postgres', 'mysql'
 define('pdo_db_type', 'mysql');
+require 'conf.php';
 
 function pdo(){
 
@@ -14,12 +15,12 @@ function pdo(){
 
 		case 'postgres':
 			$db_url = 'pgsql:host=localhost; dbname=messaging';
-			$pdo = new PDO($db_url, 'postgres', getenv('postgres_password'), [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION] );
+			$pdo = new PDO($db_url, 'postgres', postgres_password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION] );
 			break;
 
 		case 'mysql':
 			$db_url = 'mysql:host=localhost; dbname=messaging';
-			$pdo = new PDO($db_url, 'root', getenv('mysql_password'), [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION] );
+			$pdo = new PDO($db_url, 'root', mysql_password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION] );
 			break;
 	}
 

@@ -4,3 +4,5 @@ logs/
 
 db.sqlite
 .vscode/
+
+src/conf.php
