@@ -1,53 +1,50 @@
 <?php
-// Routes
 
-$app->get('/', function ($req, $res, $args) {
+// Routes (routes.php)
+
+// - PDO
+require 'pdo.php';
+
+// phpinfo()
+$app->get('/util/phpinfo', function ($request, $response, $args) {
+	phpinfo();
+});
+
+// setup database tables
+$app->get('/util/db_setup', function ($request, $response, $args) {
+    pdo_execute(pdo_setup_db_sql());
+    echo 'DB tables are now setup.';
+});
+
+// home page
+$app->get('/', function ($request, $response, $args) {
     // redirect from index to chat_client.html
-    return $res->withStatus(301)->withHeader('Location', '/chat_client.html');
+    return $response->withStatus(301)->withHeader('Location', 'chat_client.html');
 });
 
-$app->get('/chat/setup', function ($request, $response, $args) {
-    
-    $pdo = new PDO("sqlite:db.sqlite", "", "", [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION] );
-
-    $sql = "CREATE TABLE IF NOT EXISTS chat_messages (
-      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-      message_text TEXT NOT NULL,
-      sender TEXT NOT NULL,
-      creation_timestamp DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL )";
-    $pdo->query($sql); // init db tables
-    
-    echo "chat_messages table is setup";
-});
-
+// list messages
 $app->get('/chat/list', function ($request, $response, $args) use ($app) {
-
-    $pdo = new PDO("sqlite:db.sqlite", "", "", [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION] );
-    
-    $query = "SELECT * FROM chat_messages ORDER BY creation_timestamp DESC LIMIT 15";
-    $query = "SELECT * FROM ($query) AS res ORDER BY creation_timestamp ASC";
-    $messages = $pdo->query($query); // list messages
-
-    $output = '';
-
-    foreach($messages as $message){
-        $sender = htmlspecialchars($message["sender"]);
-        $text = htmlspecialchars($message["message_text"]);
-        $image = substr($text, 0, 4)==="http"; // simple image handling stub
-        $output .= $sender.": ".($image?"<img src=".$text.">":$text)."<br>";
-    }
-    
-    echo $output;
+	// OUT: $messages
+	$messages = pdo_execute('SELECT * FROM (SELECT * FROM chat_messages ORDER BY creation_timestamp DESC LIMIT 15) AS res ORDER BY creation_timestamp ASC');
+	// - produce HTML output
+	// IN: $messages OUT: $output
+	$output = '';
+	foreach($messages as $message) {
+		$sender = htmlspecialchars($message['sender']);
+		$text = htmlspecialchars($message['message_text']);
+		$output .= "$sender: $text<br>";
+	}
+	echo $output;
 });
 
+// insert new message
 $app->post('/chat/send', function ($request, $response, $args) {
-    $pdo = new PDO("sqlite:db.sqlite", "", "", [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION] );
-    
+    // IN: $request OUT: $message
     $postVars = $request->getParsedBody();
-    
-    $text = $pdo->quote($postVars["message_text"]);
-    $sender = $pdo->quote($postVars["sender"]);    
-    $sql = "INSERT INTO chat_messages (message_text, sender) VALUES ($text, $sender)";
-
-    $pdo->query($sql); // insert new message
+    $text = $postVars["message_text"];
+    $sender = $postVars["sender"];
+    $message = ['text' => $text, 'sender' => $sender];    
+    // - SQL chat send
+	// IN: $message
+	pdo_execute('INSERT INTO chat_messages (message_text, sender) VALUES (:text, :sender)', $message);
 });

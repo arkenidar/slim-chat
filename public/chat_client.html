@@ -1,26 +1,50 @@
 <!doctype html>
 <html><head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js"></script>
+<meta charset="utf-8">
+<title></title>
+</head><body>
+<script src="jquery.min.js"></script>
 <script src="chat_client.js"></script>
 <style type="text/css">
 #send_message_form {
   position: fixed;
-  z-index: 100; 
-  bottom: 0; 
+  z-index: 100;
+  top: 0;
   left: 0;
   width: 100%;
   background-color: white;
+  padding: 5px;
 }
 #message_log{
-  padding-bottom: 50px;
+  padding-top: 60px;
 }
 </style>
-<meta charset="utf-8">
-<title></title>
-</head><body>
+<style>
+.boxed {
+	border: 1px solid grey;
+}
+.container {
+    max-width: 220px;
+}
+.left {
+    width: auto;
+    overflow: hidden;
+}
+.right {
+    float: right;
+}
+.text{
+    width: 90%;
+}
+</style>
+<form class="boxed container" id="send_message_form" action="" method="post">
+<div class="container"><input class="text" type="text" name="sender" placeholder="sender" width="100%"></div>
+<div class="container">
+    <div class="right"><input type="submit" value="send"></div>
+    <div class="left">
+        <input class="text" type="text" name="message_text" autofocus="on" autocomplete="off" placeholder="message">
+    </div>
+</div>
+</form>
 <div id="message_log"></div>
-<form id="send_message_form" action="" method="post">
-Sender: <input type="text" name="sender" value="sender"><br>
-Message: <input type="text" name="message_text" autofocus="on" autocomplete="off">
-<input type="submit" value="Submit"></form>
 </body></html>
