@@ -1,15 +1,13 @@
 <?php
 
-// supported DB types: 'sqlite', 'postgres', 'mysql'
-define('pdo_db_type', 'mysql');
-require 'conf.php';
+require 'pdo_conf.php';
 
 function pdo(){
 
 	switch(pdo_db_type){
 
 		case 'sqlite':
-			$db_url = 'sqlite:../db.sqlite';
+			$db_url = 'sqlite:'.__DIR__.'/../db.sqlite';
 			$pdo = new PDO($db_url, "", "", [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION] );
 			break;
 
