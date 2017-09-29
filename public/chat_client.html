@@ -20,11 +20,8 @@
 }
 </style>
 <style>
-.boxed {
+.bordered {
 	border: 1px solid grey;
-}
-.container {
-    max-width: 220px;
 }
 .left {
     width: auto;
@@ -34,12 +31,12 @@
     float: right;
 }
 .text{
-    width: 90%;
+    width: 100%;
 }
 </style>
-<form class="boxed container" id="send_message_form" action="" method="post">
-<div class="container"><input class="text" type="text" name="sender" placeholder="sender" width="100%"></div>
-<div class="container">
+<form class="bordered" id="send_message_form" action="" method="post">
+<div><input class="text" type="text" name="sender" placeholder="sender"></div>
+<div>
     <div class="right"><input type="submit" value="send"></div>
     <div class="left">
         <input class="text" type="text" name="message_text" autofocus="on" autocomplete="off" placeholder="message">
