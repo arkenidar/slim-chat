@@ -1,58 +1,28 @@
 <!doctype html>
 <html><head>
-<meta charset="utf-8">
+
 <title>Messaging App</title>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 </head><body>
+
 <script src="jquery.min.js"></script>
 <script src="chat_client.js"></script>
-<style type="text/css">
-#send_message_form {
-  position: fixed;
-  z-index: 100;
-  bottom: 0;
-  left: 0;
-  width: 100vw;
-  background-color: white;
-  border-top: 1px solid black;
-  margin-top: -1px;
-}
-#message_log{
-  padding-bottom: 3.5em;
-  word-wrap: break-word;
-}
-body{
-margin: 0;
-}
-* {
-line-height: 1em;
-font-size: 10vmin;
-}
-input{
-border: 0;
-padding-left: 0.5em;
-overflow: hidden;
-}
-#send{
-width: 1.5em;
-height: 1.5em;
-vertical-align: bottom;
-}
-table, td {
-border: 0;
-}
-td{
-padding: 0;
-vertical-align: bottom;
-}
-</style>
-<form id="send_message_form" action="" method="post">
-<input type="text" name="sender" placeholder="sender"><br>
-<table border="1" cellpadding="0">
-<tr><td><img id="send" onclick="$('#send_message_form').submit()" src="mail.png"></td>
-<td><input name="message_text" autofocus="on" autocomplete="off" placeholder="message"></td></tr>
-</table>
-</span>
+<link rel="stylesheet" type="text/css" href="chat_client.css">
+
+<form id="send_message_form">
+
+    <!-- sender field -->
+    <input type="text" id="sender" placeholder="sender"><br>
+
+    <!-- message field with image buttons -->
+    <img id="edit_tools" alt="Edit" src="heart.gif">
+    <div id="message_text" contenteditable="true"></div>
+    <img id="send" alt="Send" src="mail.png">
+
 </form>
+
 <div id="message_log"></div>
+
 </body></html>

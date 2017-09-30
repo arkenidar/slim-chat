@@ -1,0 +1,36 @@
+form#send_message_form {
+    position: fixed;
+    z-index: 100;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    background-color: white;
+    border-top: 1px solid black;
+    margin-top: -1px;
+}
+#message_log{
+    padding-bottom: 3.5em;
+    word-wrap: break-word;
+}
+body{
+    margin: 0;
+}
+* {
+    line-height: 1em;
+    font-size: 10vmin;
+}
+input#sender{
+    border: 0;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    // 100% - (padding-left + padding-right + 0.1em)
+    width: calc(100% - 1.1em);
+}
+#edit_tools, #send{
+width: 1.5em; height: 1.5em; float:left;
+}
+#message_text{
+    min-width: calc(100% - 3em);
+    min-height: 1.5em;
+    float:left; width: calc(100% - 3em); word-wrap: break-word;
+}
