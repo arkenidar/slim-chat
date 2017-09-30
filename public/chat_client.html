@@ -1,7 +1,8 @@
 <!doctype html>
 <html><head>
 <meta charset="utf-8">
-<title></title>
+<title>Messaging App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 </head><body>
 <script src="jquery.min.js"></script>
 <script src="chat_client.js"></script>
@@ -9,39 +10,49 @@
 #send_message_form {
   position: fixed;
   z-index: 100;
-  top: 0;
+  bottom: 0;
   left: 0;
-  width: 100%;
+  width: 100vw;
   background-color: white;
-  padding: 5px;
+  border-top: 1px solid black;
+  margin-top: -1px;
 }
 #message_log{
-  padding-top: 60px;
+  padding-bottom: 3.5em;
+  word-wrap: break-word;
+}
+body{
+margin: 0;
+}
+* {
+line-height: 1em;
+font-size: 10vmin;
+}
+input{
+border: 0;
+padding-left: 0.5em;
+overflow: hidden;
+}
+#send{
+width: 1.5em;
+height: 1.5em;
+vertical-align: bottom;
+}
+table, td {
+border: 0;
+}
+td{
+padding: 0;
+vertical-align: bottom;
 }
 </style>
-<style>
-.bordered {
-	border: 1px solid grey;
-}
-.left {
-    width: auto;
-    overflow: hidden;
-}
-.right {
-    float: right;
-}
-.text{
-    width: 100%;
-}
-</style>
-<form class="bordered" id="send_message_form" action="" method="post">
-<div><input class="text" type="text" name="sender" placeholder="sender"></div>
-<div>
-    <div class="right"><input type="submit" value="send"></div>
-    <div class="left">
-        <input class="text" type="text" name="message_text" autofocus="on" autocomplete="off" placeholder="message">
-    </div>
-</div>
+<form id="send_message_form" action="" method="post">
+<input type="text" name="sender" placeholder="sender"><br>
+<table border="1" cellpadding="0">
+<tr><td><img id="send" onclick="$('#send_message_form').submit()" src="mail.png"></td>
+<td><input name="message_text" autofocus="on" autocomplete="off" placeholder="message"></td></tr>
+</table>
+</span>
 </form>
 <div id="message_log"></div>
 </body></html>

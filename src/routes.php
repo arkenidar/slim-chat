@@ -32,7 +32,7 @@ $app->get('/chat/list', function ($request, $response, $args) use ($app) {
 	foreach($messages as $message) {
 		$sender = htmlspecialchars($message['sender']);
 		$text = htmlspecialchars($message['message_text']);
-		$output .= "$sender: $text<br>";
+		$output .= "<div class=\"line\">$sender: $text</div>";
 	}
 	echo $output;
 });
