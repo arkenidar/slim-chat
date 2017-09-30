@@ -28,7 +28,7 @@ $app->get('/chat/list', function ($request, $response, $args) use ($app) {
     $messages = pdo_execute('SELECT * FROM (SELECT * FROM chat_messages ORDER BY creation_timestamp DESC LIMIT 15) AS res ORDER BY creation_timestamp ASC');
     // - produce HTML output
     // IN: $messages OUT: $output
-    $output = '';
+    $output = "<style> .line { white-space: pre-wrap; } </style>\n";
     foreach($messages as $message) {
         $sender = htmlspecialchars($message['sender']);
         $text = htmlspecialchars($message['message_text']);
