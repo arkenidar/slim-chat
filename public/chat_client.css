@@ -34,3 +34,6 @@ width: 1.5em; height: 1.5em; float:left;
     min-height: 1.5em;
     float:left; width: calc(100vw - 3em); word-wrap: break-word;
 }
+.line{
+	white-space: pre;
+}

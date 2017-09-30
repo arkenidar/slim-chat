@@ -14,11 +14,11 @@ function send_message(){
 
     var form_data_object = {
         sender: $('input#sender').val().trim(),
-        text: $('div#message_text').html().trim(),
+        text: $('div#message_text')[0].innerText,
     };
 
     // no blank message fields allowed
-    if(form_data_object.text=='' || form_data_object.text==''){
+    if(form_data_object.sender=='' || form_data_object.text==''){
          alert('no blank message fields allowed!');
          return false;
     }
