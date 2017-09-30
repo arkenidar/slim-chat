@@ -20,21 +20,23 @@ body{
     line-height: 1em;
     font-size: 10vmin;
 }
+/* width: 100vw - (padding-left + padding-right + 0.1em) */
 input#sender{
     border: 0;
     padding-left: 0.5em;
     padding-right: 0.5em;
-    /* 100vw - (padding-left + padding-right + 0.1em) */
     width: calc(100vw - 1.1em);
 }
 #edit_tools, #send{
 width: 1.5em; height: 1.5em; float:left;
 }
+/* min-width, max-width: 100vw - (#edit_tools.width + #send.width + 0.1em) */
 #message_text{
-    min-width: calc(100vw - 3em);
+    min-width: calc(100vw - 3.1em);
+    max-width: calc(100vw - 3.1em);
     min-height: 1.5em;
-    float:left; width: calc(100vw - 3em); word-wrap: break-word;
+    float:left; word-wrap: break-word;
 }
 .line{
-	white-space: pre;
+	white-space: pre-wrap;
 }
