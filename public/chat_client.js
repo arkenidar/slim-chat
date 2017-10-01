@@ -94,7 +94,7 @@ function parse_emoticons_expressions(str){
 
 // textual emoticon to HTML emoticon
 function textual_emoticon_to_html_emoticon(textual_emoticon_type){
-    // example HTML emoticon : '<img src="mail.png" class="emoticon" alt="mail">'
+    // example HTML emoticon : '<img src="img/ico/mail.png" class="emoticon" alt="mail">'
     var mapping = {
         mail: 'mail.png',
         heart: 'heart.gif',
@@ -103,7 +103,7 @@ function textual_emoticon_to_html_emoticon(textual_emoticon_type){
     var src = mapping[textual_emoticon_type];
     // for invalid mappings return null
     if(typeof src == 'undefined') return null;
-    var html = '<img src="'+src+'" class="emoticon" alt="'+textual_emoticon_type+'">';
+    var html = '<img src="img/ico/'+src+'" class="emoticon" alt="'+textual_emoticon_type+'">';
     return html;
 }
 
