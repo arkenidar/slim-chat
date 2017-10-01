@@ -79,8 +79,12 @@ function parse_emoticons_expressions(str){
         var match = matches[i];
         var textual_emoticon_type = match.slice(1,-1);
         var html_emoticon = textual_emoticon_to_html_emoticon(textual_emoticon_type);
+        if(html_emoticon == null) continue;
         processed[match] = html_emoticon;
     }
+
+    if(Object.keys(processed).length == 0)
+        return null;
 
     for(var original in processed){
         str = str.replace(original, processed[original]);
@@ -97,8 +101,8 @@ function textual_emoticon_to_html_emoticon(textual_emoticon_type){
     };
 
     var src = mapping[textual_emoticon_type];
-    // for invalid mappings return empty string
-    if(typeof src == 'undefined') return '('+textual_emoticon_type+')';
+    // for invalid mappings return null
+    if(typeof src == 'undefined') return null;
     var html = '<img src="'+src+'" class="emoticon" alt="'+textual_emoticon_type+'">';
     return html;
 }
