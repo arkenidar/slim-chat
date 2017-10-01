@@ -28,7 +28,7 @@ input#sender{
     width: calc(100vw - 1.1em);
 }
 #edit_tools, #send{
-width: 1.5em; height: 1.5em; float:left;
+    float:left;
 }
 /* min-width, max-width: 100vw - (#edit_tools.width + #send.width + 0.1em) */
 #message_text{
@@ -38,5 +38,10 @@ width: 1.5em; height: 1.5em; float:left;
     float:left; word-wrap: break-word;
 }
 .line{
-	white-space: pre-wrap;
+    white-space: pre-wrap;
+}
+#edit_tools, #send, .emoticon{
+    width: 1.2em;
+    height: 1.2em;
+    padding: 0.1em;
 }

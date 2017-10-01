@@ -12,16 +12,23 @@ function periodicallyListMessagesCallback(){ var scrollFlag = isScrolledToBottom
 // allow message sending
 function send_message(){
 
-    var form_data_object = {
-        sender: $('input#sender').val().trim(),
-        text: $('div#message_text')[0].innerText,
-    };
-
+    var sender = $('input#sender').val().trim();
     // no blank message fields allowed
-    if(form_data_object.sender=='' || form_data_object.text==''){
-         alert('no blank message fields allowed!');
+    if(sender==''){
+         alert('no blank sender field allowed!');
          return false;
     }
+    if($('div#message_text').html()==''){
+         alert('no blank message field allowed!');
+         return false;
+    }
+
+    replace_all_html_emoticons();
+
+    var form_data_object = {
+        sender: sender,
+        text: $('div#message_text')[0].innerText,
+    };
 
     // disable form on pre-submit
     $('#send_message_form *').prop('disabled', true);
@@ -45,6 +52,57 @@ function send_message(){
     });
 }
 
+// replace HTML emoticons with textual emoticons before sending, to preserve them
+function replace_all_html_emoticons(){
+    // emoticon's img elements
+    var imgs = $('#message_text img[class="emoticon"]');
+    imgs.each(function () {
+        var html_emoticon_element = $(this);
+        replace_html_emoticon(html_emoticon_element);
+    });
+}
+
+// replace HTML emoticon with textual emoticon
+function replace_html_emoticon(html_emoticon_element){
+    html_emoticon_element.replaceWith('('+html_emoticon_element.attr('alt')+')');
+}
+
+// parse all textual emoticons expressions found in message to send
+function parse_emoticons_expressions(str){
+    var regex = /\(\w+\)/gi;
+    var matches = str.match(regex);
+    if(matches == null)
+        return null;
+    var processed = [];
+
+    for(var i in matches){
+        var match = matches[i];
+        var textual_emoticon_type = match.slice(1,-1);
+        var html_emoticon = textual_emoticon_to_html_emoticon(textual_emoticon_type);
+        processed[match] = html_emoticon;
+    }
+
+    for(var original in processed){
+        str = str.replace(original, processed[original]);
+    }
+    return str;
+}
+
+// textual emoticon to HTML emoticon
+function textual_emoticon_to_html_emoticon(textual_emoticon_type){
+    // example HTML emoticon : '<img src="mail.png" class="emoticon" alt="mail">'
+    var mapping = {
+        mail: 'mail.png',
+        heart: 'heart.gif',
+    };
+
+    var src = mapping[textual_emoticon_type];
+    // for invalid mappings return empty string
+    if(typeof src == 'undefined') return '('+textual_emoticon_type+')';
+    var html = '<img src="'+src+'" class="emoticon" alt="'+textual_emoticon_type+'">';
+    return html;
+}
+
 // on ready
 $(function(){
 
@@ -52,5 +110,11 @@ $(function(){
     setInterval(periodicallyListMessagesCallback, 1000); // get messages periodically
 
     $('#send').click(send_message);
-});
 
+    $("#message_text").on('input', function(e){
+        var new_html = parse_emoticons_expressions( $("#message_text").html() );
+        if(new_html!=null)
+            $("#message_text").html(new_html);
+    });
+
+});
