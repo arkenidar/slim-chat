@@ -6,6 +6,7 @@ function textual_emoticon_to_html_emoticon($textual_emoticon_type){
     $mapping = [
         'mail' => 'mail.png',
         'heart' => 'heart.gif',
+        'smile' => 'smile.png',
     ];
     if(!array_key_exists($textual_emoticon_type, $mapping)) return null;
     $src = $mapping[$textual_emoticon_type];

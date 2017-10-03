@@ -10,7 +10,7 @@ $(function(){
 
     $('#message_text').on('input', on_input);
     $('#edit_tools').click(()=>{
-        $('#message_text').html($('#message_text').html()+'(heart)');
+        $('#message_text').html($('#message_text').html()+'(smile)');
         $('#message_text').trigger('input');
     });
 
@@ -85,6 +85,9 @@ function replace_all_html_emoticons(){
 
 // parse all textual emoticons expressions found in message to send
 function parse_emoticons_expressions(str){
+
+    str = str.replace(':)', '(smile)');
+
     var regex = /\(\w+\)/gi;
     var matches = str.match(regex);
     if(matches == null)
@@ -113,6 +116,7 @@ function parse_emoticons_expressions(str){
         var mapping = {
             mail: 'mail.png',
             heart: 'heart.gif',
+            smile: 'smile.png',
         };
 
         var src = mapping[textual_emoticon_type];
