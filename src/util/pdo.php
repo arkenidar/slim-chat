@@ -7,7 +7,7 @@ function pdo(){
 	switch(pdo_db_type){
 
 		case 'sqlite':
-			$db_url = 'sqlite:'.__DIR__.'/../db.sqlite';
+			$db_url = 'sqlite:'.__DIR__.'/../../db.sqlite';
 			$pdo = new PDO($db_url, "", "", [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION] );
 			break;
 
