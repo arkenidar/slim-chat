@@ -8,7 +8,11 @@ $(function(){
 
     $('#send').click(send_message);
 
-    $("#message_text").on('input', on_input);
+    $('#message_text').on('input', on_input);
+    $('#edit_tools').click(()=>{
+        $('#message_text').html($('#message_text').html()+'(heart)');
+        $('#message_text').trigger('input');
+    });
 
 });
 
