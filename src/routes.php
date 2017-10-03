@@ -3,7 +3,7 @@
 // Routes (routes.php)
 
 // - PDO
-require 'pdo.php';
+require 'util/pdo.php';
 
 // phpinfo()
 $app->get('/util/phpinfo', function ($request, $response, $args) {

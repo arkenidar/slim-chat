@@ -5,4 +5,4 @@ logs/
 db.sqlite
 .vscode/
 
-src/pdo_conf.php
+src/util/pdo_conf.php
