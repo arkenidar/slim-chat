@@ -25,25 +25,30 @@ function scrollToBottom(){ $('html')[0].scrollTop = scrollHeight(); }
 function listMessages(scrollFlag){ $('#message_log').load(base_dir+'/chat/list', function(){ if(scrollFlag) scrollToBottom(); } ) }
 function periodicallyListMessagesCallback(){ var scrollFlag = isScrolledToBottom(); listMessages(scrollFlag); }
 
+function get_input(){
+    replace_all_html_emoticons();
+    return $('div#message_text')[0].innerText;
+}
+
 // allow message sending
 function send_message(){
 
-    var sender = $('input#sender').val().trim();
     // no blank message fields allowed
+    var sender = $('input#sender').val().trim();
     if(sender==''){
-         alert('no blank sender field allowed!');
-         return false;
-    }
-    if($('div#message_text').html()==''){
-         alert('no blank message field allowed!');
+         alert('fill the Sender field!');
          return false;
     }
 
-    replace_all_html_emoticons();
+    var input = get_input();
+    if(input==''){
+         alert('fill the Message field!');
+         return false;
+    }
 
     var form_data_object = {
         sender: sender,
-        text: $('div#message_text')[0].innerText,
+        text: input,
     };
 
     // disable form on pre-submit
@@ -83,71 +88,73 @@ function replace_all_html_emoticons(){
     }
 }
 
+// textual emoticon to HTML emoticon
+function textual_emoticon_to_html_emoticon(textual_emoticon_text){
+    // example HTML emoticon : '<img src="img/ico/mail.png" class="emoticon" alt="mail">'
+    var mapping = {
+        mail: 'mail.png',
+        heart: 'heart.gif',
+        smile: 'smile.png',
+    };
+    var textual_emoticon_type = textual_emoticon_text.slice(1,-1);
+    var src = mapping[textual_emoticon_type];
+    // for invalid mappings...
+    if(typeof src == 'undefined') return textual_emoticon_text;
+    var html = '<img src="img/ico/'+src+'" class="emoticon" alt="'+textual_emoticon_type+'">';
+    return html;
+}
+
 // parse all textual emoticons expressions found in message to send
-function parse_emoticons_expressions(str){
+function parse_emoticons_expressions(string){
+    return string.replace(/(\(\w+\))/gi, textual_emoticon_to_html_emoticon);
+}
 
-    str = str.replace(':)', '(smile)');
+function escapeRegExp(str) {
+  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+}
 
-    var regex = /\(\w+\)/gi;
-    var matches = str.match(regex);
-    if(matches == null)
-        return null;
-    var processed = [];
+function replace_all(string, replace_what, replace_with){
+    return string.replace(
+        new RegExp(escapeRegExp(replace_what), 'gi'),
+        replace_with
+    );
+}
 
-    for(var i in matches){
-        var match = matches[i];
-        var textual_emoticon_type = match.slice(1,-1);
-        var html_emoticon = textual_emoticon_to_html_emoticon(textual_emoticon_type);
-        if(html_emoticon == null) continue;
-        processed[match] = html_emoticon;
+function replace_smileys(input){
+    var mappings = [
+        [':)', '(smile)'],
+        ['<3', '(heart)'],
+    ];
+    for(mapping of mappings){
+        input = replace_all(input, mapping[0], mapping[1]);
     }
+    return input;
+}
 
-    if(Object.keys(processed).length == 0)
-        return null;
-
-    for(var original in processed){
-        str = str.replace(original, processed[original]);
-    }
-    return str;
-
-    // textual emoticon to HTML emoticon
-    function textual_emoticon_to_html_emoticon(textual_emoticon_type){
-        // example HTML emoticon : '<img src="img/ico/mail.png" class="emoticon" alt="mail">'
-        var mapping = {
-            mail: 'mail.png',
-            heart: 'heart.gif',
-            smile: 'smile.png',
-        };
-
-        var src = mapping[textual_emoticon_type];
-        // for invalid mappings return null
-        if(typeof src == 'undefined') return null;
-        var html = '<img src="img/ico/'+src+'" class="emoticon" alt="'+textual_emoticon_type+'">';
-        return html;
+function placeCaretAtEnd(el) {
+    el.focus();
+    if (typeof window.getSelection != "undefined"
+            && typeof document.createRange != "undefined") {
+        var range = document.createRange();
+        range.selectNodeContents(el);
+        range.collapse(false);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+    } else if (typeof document.body.createTextRange != "undefined") {
+        var textRange = document.body.createTextRange();
+        textRange.moveToElementText(el);
+        textRange.collapse(false);
+        textRange.select();
     }
 }
 
 function on_input(inputEvent){
-    var new_html = parse_emoticons_expressions( $(this).html() );
+    var input = get_input();
+    input = replace_smileys(input)
+    var new_html = parse_emoticons_expressions(input);
     if(new_html!=null){
         $(this).html(new_html);
-        function placeCaretAtEnd(el) {
-            el.focus();
-            if (typeof window.getSelection != "undefined"
-                    && typeof document.createRange != "undefined") {
-                var range = document.createRange();
-                range.selectNodeContents(el);
-                range.collapse(false);
-                var sel = window.getSelection();
-                sel.removeAllRanges();
-                sel.addRange(range);
-            } else if (typeof document.body.createTextRange != "undefined") {
-                var textRange = document.body.createTextRange();
-                textRange.moveToElementText(el);
-                textRange.collapse(false);
-                textRange.select();
-            }
-        }
         placeCaretAtEnd($(this)[0]);
     }
 }

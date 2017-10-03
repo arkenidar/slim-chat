@@ -35,7 +35,7 @@ $app->get('/chat/list', function ($request, $response, $args) use ($app) {
         $sender = htmlspecialchars($message['sender']);
         $text = htmlspecialchars($message['message_text']);
         $text = parse_emoticons_expressions($text);
-        $output .= "<div class=\"line\">$sender: $text</div>\n";
+        $output .= "<div class=\"line\"><u>$sender</u>: $text</div>\n";
     }
     echo $output;
 });
