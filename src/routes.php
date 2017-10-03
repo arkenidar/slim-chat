@@ -22,6 +22,8 @@ $app->get('/', function ($request, $response, $args) {
     return $response->withStatus(301)->withHeader('Location', 'chat_client.html');
 });
 
+require 'util/emoticons.php';
+
 // list messages
 $app->get('/chat/list', function ($request, $response, $args) use ($app) {
     // OUT: $messages
@@ -32,6 +34,7 @@ $app->get('/chat/list', function ($request, $response, $args) use ($app) {
     foreach($messages as $message) {
         $sender = htmlspecialchars($message['sender']);
         $text = htmlspecialchars($message['message_text']);
+        $text = parse_emoticons_expressions($text);
         $output .= "<div class=\"line\">$sender: $text</div>\n";
     }
     echo $output;
