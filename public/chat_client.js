@@ -1,4 +1,16 @@
-var base_dir = window.location.pathname.split('/').slice(0,-1).join('/');
+const base_dir = window.location.pathname.split('/').slice(0,-1).join('/');
+
+// on ready
+$(function(){
+
+    // stay updated
+    setInterval(periodicallyListMessagesCallback, 1000); // get messages periodically
+
+    $('#send').click(send_message);
+
+    $("#message_text").on('input', on_input);
+
+});
 
 // chat scrolling
 function scrollHeight(){ return $(document).height()-$(window).height(); }
@@ -52,7 +64,7 @@ function send_message(){
     });
 }
 
-// replace HTML emoticons with textual emoticons before sending, to preserve them
+// replace all HTML emoticons with textual emoticons before sending, to preserve them
 function replace_all_html_emoticons(){
     // emoticon's img elements
     var imgs = $('#message_text img[class="emoticon"]');
@@ -60,11 +72,11 @@ function replace_all_html_emoticons(){
         var html_emoticon_element = $(this);
         replace_html_emoticon(html_emoticon_element);
     });
-}
 
-// replace HTML emoticon with textual emoticon
-function replace_html_emoticon(html_emoticon_element){
-    html_emoticon_element.replaceWith('('+html_emoticon_element.attr('alt')+')');
+    // replace HTML emoticon with textual emoticon
+    function replace_html_emoticon(html_emoticon_element){
+        html_emoticon_element.replaceWith('('+html_emoticon_element.attr('alt')+')');
+    }
 }
 
 // parse all textual emoticons expressions found in message to send
@@ -90,35 +102,44 @@ function parse_emoticons_expressions(str){
         str = str.replace(original, processed[original]);
     }
     return str;
+
+    // textual emoticon to HTML emoticon
+    function textual_emoticon_to_html_emoticon(textual_emoticon_type){
+        // example HTML emoticon : '<img src="img/ico/mail.png" class="emoticon" alt="mail">'
+        var mapping = {
+            mail: 'mail.png',
+            heart: 'heart.gif',
+        };
+
+        var src = mapping[textual_emoticon_type];
+        // for invalid mappings return null
+        if(typeof src == 'undefined') return null;
+        var html = '<img src="img/ico/'+src+'" class="emoticon" alt="'+textual_emoticon_type+'">';
+        return html;
+    }
 }
 
-// textual emoticon to HTML emoticon
-function textual_emoticon_to_html_emoticon(textual_emoticon_type){
-    // example HTML emoticon : '<img src="img/ico/mail.png" class="emoticon" alt="mail">'
-    var mapping = {
-        mail: 'mail.png',
-        heart: 'heart.gif',
-    };
-
-    var src = mapping[textual_emoticon_type];
-    // for invalid mappings return null
-    if(typeof src == 'undefined') return null;
-    var html = '<img src="img/ico/'+src+'" class="emoticon" alt="'+textual_emoticon_type+'">';
-    return html;
+function on_input(inputEvent){
+    var new_html = parse_emoticons_expressions( $(this).html() );
+    if(new_html!=null){
+        $(this).html(new_html);
+        function placeCaretAtEnd(el) {
+            el.focus();
+            if (typeof window.getSelection != "undefined"
+                    && typeof document.createRange != "undefined") {
+                var range = document.createRange();
+                range.selectNodeContents(el);
+                range.collapse(false);
+                var sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+            } else if (typeof document.body.createTextRange != "undefined") {
+                var textRange = document.body.createTextRange();
+                textRange.moveToElementText(el);
+                textRange.collapse(false);
+                textRange.select();
+            }
+        }
+        placeCaretAtEnd($(this)[0]);
+    }
 }
-
-// on ready
-$(function(){
-
-    // stay updated
-    setInterval(periodicallyListMessagesCallback, 1000); // get messages periodically
-
-    $('#send').click(send_message);
-
-    $("#message_text").on('input', function(e){
-        var new_html = parse_emoticons_expressions( $("#message_text").html() );
-        if(new_html!=null)
-            $("#message_text").html(new_html);
-    });
-
-});
