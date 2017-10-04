@@ -1,31 +1,33 @@
 <?php
 
 // Routes (routes.php)
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 // - PDO
 require 'util/pdo.php';
 
 // phpinfo()
-$app->get('/util/phpinfo', function ($request, $response, $args) {
+$app->get('/util/phpinfo', function () {
     phpinfo();
 });
 
 // setup database tables
-$app->get('/util/db_setup', function ($request, $response, $args) {
+$app->get('/util/db_setup', function () {
     pdo_execute(pdo_setup_db_sql());
     echo 'DB tables are now setup.';
 });
 
 // home page
-$app->get('/', function ($request, $response, $args) {
+$app->get('/', function (Request $request, Response $response) {
     // redirect from index to chat_client.html
-    return $response->withStatus(301)->withHeader('Location', 'chat_client.html');
+    return $response->withRedirect('chat_client.html');
 });
 
 require 'util/emoticons.php';
 
 // list messages
-$app->get('/chat/list', function ($request, $response, $args) use ($app) {
+$app->get('/chat/list', function () {
     // OUT: $messages
     $messages = pdo_execute('SELECT * FROM (SELECT * FROM chat_messages ORDER BY creation_timestamp DESC LIMIT 15) AS res ORDER BY creation_timestamp ASC');
     // - produce HTML output
@@ -41,7 +43,7 @@ $app->get('/chat/list', function ($request, $response, $args) use ($app) {
 });
 
 // insert new message
-$app->post('/chat/send', function ($request, $response, $args) {
+$app->post('/chat/send', function (Request $request) {
     $unparsedBodyJSON = $request->getBody();
     // IN: $request OUT: $message
     //$unparsedBodyJSON = $request->getBody();
