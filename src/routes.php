@@ -36,12 +36,13 @@ $app->get('/', function (Request $request, Response $response) {
 require 'util/emoticons.php';
 
 // list messages
-$app->get('/chat/list', function () {
+$app->get('/chat_list', function () {
     // OUT: $messages
     $messages = pdo_execute('SELECT * FROM (SELECT * FROM chat_messages ORDER BY creation_timestamp DESC LIMIT 15) AS res ORDER BY creation_timestamp ASC');
     // - produce HTML output
     // IN: $messages OUT: $output
-    $output = "<style> .line { white-space: pre-wrap; } </style>\n";
+    $output = '<style> .line { white-space: pre-wrap; } </style>'."\n"
+    .'<link rel="stylesheet" type="text/css" href="chat_client.css">';
     foreach($messages as $message) {
         $sender = htmlspecialchars($message['sender']);
         $text = htmlspecialchars($message['message_text']);
@@ -52,7 +53,7 @@ $app->get('/chat/list', function () {
 });
 
 // insert new message
-$app->post('/chat/send', function (Request $request) {
+$app->post('/chat_send', function (Request $request) {
     $unparsedBodyJSON = $request->getBody();
     // IN: $request OUT: $message
     //$unparsedBodyJSON = $request->getBody();

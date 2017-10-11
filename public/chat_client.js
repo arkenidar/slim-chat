@@ -25,6 +25,13 @@ $(function(){
         $('#message_text').trigger('input');
     });
 
+    $.getJSON( "ico_mapping.json", function(data) {
+        ico_mapping = data;
+    })
+    .fail(function() {
+      alert( "error! (when loading icons's mapping)" );
+    });
+
 });
 
 // chat scrolling
@@ -33,7 +40,7 @@ function isScrolledToBottom(){ return $('html')[0].scrollTop == scrollHeight(); 
 function scrollToBottom(){ $('html')[0].scrollTop = scrollHeight(); }
 
 // message listing
-function listMessages(scrollFlag){ $('#message_log').load(base_dir+'/chat/list', function(){ if(scrollFlag) scrollToBottom(); } ) }
+function listMessages(scrollFlag){ $('#message_log').load(base_dir+'/chat_list', function(){ if(scrollFlag) scrollToBottom(); } ) }
 function periodicallyListMessagesCallback(){ var scrollFlag = isScrolledToBottom(); listMessages(scrollFlag); }
 
 function get_input(){
@@ -68,7 +75,7 @@ function send_message(){
     // send JSON with POST type HTTP request
     $.ajax({
         type: 'POST',
-        url: base_dir+'/chat/send',
+        url: base_dir+'/chat_send',
         dataType: 'text',
         data: JSON.stringify(form_data_object),
     }).done(function(){
@@ -102,11 +109,7 @@ function replace_all_html_emoticons(){
 // textual emoticon to HTML emoticon
 function textual_emoticon_to_html_emoticon(textual_emoticon_text){
     // example HTML emoticon : '<img src="img/ico/mail.png" class="emoticon" alt="mail">'
-    var mapping = {
-        mail: 'mail.png',
-        heart: 'heart.gif',
-        smile: 'smile.png',
-    };
+    var mapping = ico_mapping;
     var textual_emoticon_type = textual_emoticon_text.slice(1,-1);
     var src = mapping[textual_emoticon_type];
     // for invalid mappings...

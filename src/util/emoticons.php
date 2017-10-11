@@ -12,15 +12,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 // textual emoticon to HTML emoticon
 function textual_emoticon_to_html_emoticon($textual_emoticon_type){
-    // example HTML emoticon : '<img src="img/ico/mail.png" class="emoticon" alt="mail">'
-    $mapping = [
-        'mail' => 'mail.png',
-        'heart' => 'heart.gif',
-        'smile' => 'smile.png',
-    ];
+    // example HTML emoticon : '<img src="img/ico/mail.png" class="emoticon" alt="(mail)">'
+    $mapping = json_decode(file_get_contents(dirname(dirname(dirname(__FILE__))).'/public/ico_mapping.json'), true);
     if(!array_key_exists($textual_emoticon_type, $mapping)) return null;
     $src = $mapping[$textual_emoticon_type];
-    $html = '<img src="img/ico/'.$src.'" class="emoticon" alt="'.$textual_emoticon_type.'">';
+    $html = '<img src="img/ico/'.$src.'" class="emoticon" alt="('.$textual_emoticon_type.')">';
     return $html;
 }
 
