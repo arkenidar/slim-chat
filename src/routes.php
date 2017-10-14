@@ -17,14 +17,16 @@ use Slim\Http\Response;
 require 'util/pdo.php';
 
 // phpinfo()
-$app->get('/util/phpinfo', function () {
+$app->get('/util/phpinfo', function (Request $request, Response $response) {
     phpinfo();
+    return $response->withStatus(200);
 });
 
 // setup database tables
-$app->get('/util/db_setup', function () {
+$app->get('/util/db_setup', function (Request $request, Response $response) {
     pdo_execute(pdo_setup_db_sql());
     echo 'DB tables are now setup.';
+    return $response->withStatus(200);
 });
 
 // home page
@@ -36,31 +38,39 @@ $app->get('/', function (Request $request, Response $response) {
 require 'util/emoticons.php';
 
 // list messages
-$app->get('/chat_list', function () {
+$app->get('/chat_list', function (Request $request, Response $response) {
     // OUT: $messages
     $messages = pdo_execute('SELECT * FROM (SELECT * FROM chat_messages ORDER BY creation_timestamp DESC LIMIT 15) AS res ORDER BY creation_timestamp ASC');
     // - produce HTML output
     // IN: $messages OUT: $output
-    $output = '<style> .line { white-space: pre-wrap; } </style>'."\n"
-    .'<link rel="stylesheet" type="text/css" href="chat_client.css">';
+    $output = '<link rel="stylesheet" type="text/css" href="chat_client.css">'."\n";
     foreach($messages as $message) {
         $sender = htmlspecialchars($message['sender']);
         $text = htmlspecialchars($message['message_text']);
         $text = parse_emoticons_expressions($text);
-        $output .= "<div class=\"line\"><u>$sender</u>: $text</div>\n";
+        $output .= "<div class=\"line\"><em>$sender</em>: $text</div>\n";
     }
     echo $output;
+    return $response->withStatus(200);
 });
 
 // insert new message
-$app->post('/chat_send', function (Request $request) {
+$app->post('/chat_send', function (Request $request, Response $response) {
     $unparsedBodyJSON = $request->getBody();
     // IN: $request OUT: $message
     //$unparsedBodyJSON = $request->getBody();
     // parse the JSON into an associative array
     $message = json_decode($unparsedBodyJSON, true);
-    // $message has value ['text' => ..., 'sender' => ...];    
+    // $message has value ['message_text' => ..., 'sender' => ...];
     // - SQL chat send
     // IN: $message
-    pdo_execute('INSERT INTO chat_messages (message_text, sender) VALUES (:text, :sender)', $message);
+    $message['sender'] = @$_SESSION["user-name"];
+    if($message['sender']=='') $message['sender'] = 'not authenticated sender user';
+    pdo_execute('INSERT INTO chat_messages (message_text, sender) VALUES (:message_text, :sender)', $message);
+    return $response->withStatus(200);
+});
+
+$app->get('/user_logged', function (Request $request, Response $response){
+    echo @$_SESSION["user-name"];
+    return $response->withStatus(200);
 });

@@ -15,7 +15,7 @@ const base_dir = window.location.pathname.split('/').slice(0,-1).join('/');
 $(function(){
 
     // stay updated
-    setInterval(periodicallyListMessagesCallback, 1000); // get messages periodically
+    setInterval(periodicallyListMessagesCallback, 3000); // get messages periodically
 
     $('#send').click(send_message);
 
@@ -25,13 +25,19 @@ $(function(){
         $('#message_text').trigger('input');
     });
 
-    $.getJSON( "ico_mapping.json", function(data) {
+    $.getJSON( 'ico_mapping.json', function(data) {
         ico_mapping = data;
     })
     .fail(function() {
       alert( "error! (when loading icons's mapping)" );
     });
 
+    $.get('user_logged', function(data) {
+        $('#user').val(data);
+    })
+    .fail(function() {
+      alert( "error! (when loading 'logged user')" );
+    });
 });
 
 // chat scrolling
@@ -52,22 +58,13 @@ function get_input(){
 function send_message(){
 
     // no blank message fields allowed
-    var sender = $('input#sender').val().trim();
-    if(sender==''){
-         alert('fill the Sender field!');
-         return false;
-    }
-
-    var input = get_input();
-    if(input==''){
+    var message_text = get_input();
+    if(message_text==''){
          alert('fill the Message field!');
          return false;
     }
 
-    var form_data_object = {
-        sender: sender,
-        text: input,
-    };
+    var form_data_object = { message_text };
 
     // disable form on pre-submit
     $('#send_message_form *').prop('disabled', true);

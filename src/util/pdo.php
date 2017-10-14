@@ -17,7 +17,7 @@ function pdo(){
 	switch(pdo_db_type){
 
 		case 'sqlite':
-			$db_url = 'sqlite:'.__DIR__.'/../../db.sqlite';
+			$db_url = 'sqlite:'.dirname(dirname(dirname(__FILE__))).'/db.sqlite';
 			$pdo = new PDO($db_url, "", "", [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION] );
 			break;
 
@@ -34,6 +34,8 @@ function pdo(){
 
 	return $pdo;
 }
+
+$pdo = pdo();
 
 function pdo_setup_db_sql(){
 	$postgres_or_mysql = 'CREATE TABLE IF NOT EXISTS chat_messages (
@@ -55,7 +57,7 @@ function pdo_setup_db_sql(){
 }
 
 function pdo_execute($sql, $params = []) {
-	$pdo = pdo();
+	global $pdo;
 	$stat = $pdo->prepare($sql);
 	assert($stat);
 	$res = $stat->execute($params);

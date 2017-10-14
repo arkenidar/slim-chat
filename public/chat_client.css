@@ -22,7 +22,6 @@ form#send_message_form {
 }
 #message_log{
     padding-bottom: 3.5em;
-    word-wrap: break-word;
 }
 body{
     margin: 0;
@@ -46,10 +45,17 @@ input#sender{
     min-width: calc(100vw - 3.1em);
     max-width: calc(100vw - 3.1em);
     min-height: 1.5em;
-    float:left; word-wrap: break-word;
-}
-.line{
+    float:left;
+
     white-space: pre-wrap;
+    word-wrap: break-word;
+}
+.line *, .line {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+.line {
+    border:  solid;
 }
 #edit_tools, #send, .emoticon{
     width: 1.2em;
