@@ -67,7 +67,10 @@ $app->post('/chat_send', function (Request $request, Response $response) {
     // - SQL chat send
     // IN: $message
     $message['sender'] = @$_SESSION["user-name"];
-    if($message['sender']=='') $message['sender'] = 'not authenticated sender user';
+    if($message['sender']=='') {
+        $message['sender'] = 'not authenticated sender user';
+        return $response->withStatus(401); // HTTP Status: 401 (UnAuthorized)
+    }
     pdo_execute('INSERT INTO chat_messages (message_text, sender) VALUES (:message_text, :sender)', $message);
     return $response->withStatus(200);
 });
