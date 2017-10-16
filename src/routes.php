@@ -36,6 +36,7 @@ $app->get('/', function (Request $request, Response $response) {
 });
 
 require 'util/emoticons.php';
+require 'util/links.php';
 
 // list messages
 $app->get('/chat_list', function (Request $request, Response $response) {
@@ -48,6 +49,7 @@ $app->get('/chat_list', function (Request $request, Response $response) {
         $sender = htmlspecialchars($message['sender']);
         $text = htmlspecialchars($message['message_text']);
         $text = parse_emoticons_expressions($text);
+        $text = create_html_links($text);
         $output .= "<div class=\"line\"><em>$sender</em>: $text</div>\n";
     }
     echo $output;
