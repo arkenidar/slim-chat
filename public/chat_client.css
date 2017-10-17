@@ -55,7 +55,7 @@ input#sender{
     word-wrap: break-word;
 }
 .line {
-    border:  solid;
+    border-bottom:  solid;
 }
 #edit_tools, #send, .emoticon{
     width: 1.2em;
