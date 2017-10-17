@@ -33,7 +33,7 @@ $(function(){
     });
 
     $.get('user_logged', function(data) {
-        $('#user').val(data);
+        $('#user').text(data);
     })
     .fail(function() {
       alert( "error! (when loading 'logged user')" );

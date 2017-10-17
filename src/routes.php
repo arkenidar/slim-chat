@@ -44,7 +44,8 @@ $app->get('/chat_list', function (Request $request, Response $response) {
     $messages = pdo_execute('SELECT * FROM (SELECT * FROM chat_messages ORDER BY creation_timestamp DESC LIMIT 15) AS res ORDER BY creation_timestamp ASC');
     // - produce HTML output
     // IN: $messages OUT: $output
-    $output = '<link rel="stylesheet" type="text/css" href="chat_client.css">'."\n";
+    $style = $request->getQueryParam('style', false);
+    $output = $style?'<link rel="stylesheet" type="text/css" href="chat_client.css">'."\n":'';
     foreach($messages as $message) {
         $sender = htmlspecialchars($message['sender']);
         $text = htmlspecialchars($message['message_text']);
@@ -56,6 +57,10 @@ $app->get('/chat_list', function (Request $request, Response $response) {
     return $response->withStatus(200);
 });
 
+function user(){
+    return @$_SESSION["user-tavatar"];
+}
+
 // insert new message
 $app->post('/chat_send', function (Request $request, Response $response) {
     $unparsedBodyJSON = $request->getBody();
@@ -66,7 +71,7 @@ $app->post('/chat_send', function (Request $request, Response $response) {
     // $message has value ['message_text' => ..., 'sender' => ...];
     // - SQL chat send
     // IN: $message
-    $message['sender'] = @$_SESSION["user-name"];
+    $message['sender'] = user();
     if($message['sender']=='') {
         $message['sender'] = 'not authenticated sender user';
         return $response->withStatus(401); // HTTP Status: 401 (UnAuthorized)
@@ -76,6 +81,6 @@ $app->post('/chat_send', function (Request $request, Response $response) {
 });
 
 $app->get('/user_logged', function (Request $request, Response $response){
-    echo @$_SESSION["user-name"];
+    echo user();
     return $response->withStatus(200);
 });
