@@ -20,8 +20,11 @@ form#send_message_form {
     margin-top: -1px;
     max-height: 100vh;
 }
-#message_log{
+.scrollable_below_bottom_panel {
     padding-bottom: calc(2em + 13vw);
+}
+.hidden {
+    display: none;
 }
 body{
     margin: 0;

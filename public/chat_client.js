@@ -20,16 +20,16 @@ $(function(){
     $('#send').click(send_message);
 
     $('#message_text').on('input', on_input);
-    $('#edit_tools').click(()=>{
-        $('#message_text').html($('#message_text').html()+':smile:');
-        $('#message_text').trigger('input');
-    });
 
-    $.getJSON( 'ico_mapping.json', function(data) {
-        ico_mapping = data;
-    })
-    .fail(function() {
-      alert( "error! (when loading icons's mapping)" );
+    $.ajax({
+        url: 'ico_mapping.json',
+        success: function(data) {
+            ico_mapping = data;
+            setup_emoticon_palette();
+        },
+        fail: function() {
+          alert( "error! (when loading icons's mapping)" );
+        }
     });
 
     $.get('user_logged', function(data) {
@@ -40,6 +40,44 @@ $(function(){
       alert( "error! (when loading 'logged user')" );
     });
 });
+
+function setup_emoticon_palette() {
+    // emoticon palette / creation of its HTML
+    for(textual_emoticon in ico_mapping){
+        var src = ico_mapping[textual_emoticon];
+        $('#emoticons_palette').append(
+            `<img src="img/ico/${src}" class="emoticon" alt=":${textual_emoticon}:">`
+        );
+
+    }
+
+    // emoticon palette / toggling
+    var emoticons_palette_showed = false;
+    var scroll_top_keeping;
+    $('#edit_tools').click(()=>{
+        if(emoticons_palette_showed){
+            $('#emoticons_palette').hide();
+            emoticons_palette_showed = false;
+            $('#message_log').show();
+            $('html')[0].scrollTop = scroll_top_keeping;
+
+        } else {
+            scroll_top_keeping = $('html')[0].scrollTop;
+            $('#message_log').hide();
+            $('#emoticons_palette').show();
+            emoticons_palette_showed = true;
+        }
+    });
+
+    // emoticon palette / emoticon insertion
+    $('#emoticons_palette .emoticon').click(function() {
+        insert_emoticon_into_message($(this).attr('alt'));
+    });
+    function insert_emoticon_into_message(textual_emoticon_text) {
+        $('#message_text').html($('#message_text').html()+textual_emoticon_text);
+        $('#message_text').trigger('input');
+    }
+}
 
 // chat scrolling
 function scrollHeight(){ return $(document).height()-$(window).height(); }
