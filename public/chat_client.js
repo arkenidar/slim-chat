@@ -21,7 +21,7 @@ $(function(){
 
     $('#message_text').on('input', on_input);
     $('#edit_tools').click(()=>{
-        $('#message_text').text($('#message_text').text()+':smile:');
+        $('#message_text').html($('#message_text').html()+':smile:');
         $('#message_text').trigger('input');
     });
 
