@@ -166,9 +166,17 @@ function placeCaretAtEnd(el) {
     }
 }
 
+function escapeHtml(text) {
+    'use strict';
+    return text.replace(/[\"&<>]/g, function (a) {
+        return { '"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;' }[a];
+    });
+}
+
 function on_input(inputEvent){
     var input = get_input();
-    input = replace_smileys(input)
+    input = replace_smileys(input);
+    input = escapeHtml(input);
     var new_html = parse_emoticons_expressions(input);
     if(new_html!=null){
         $(this).html(new_html);
