@@ -60,7 +60,7 @@ table, tr, td {
     word-wrap: break-word;
 }
 .line {
-    border-bottom:  solid;
+    border-bottom: solid;
 }
 #edit_tools, #send, .emoticon{
     width: 13vw;
