@@ -50,8 +50,8 @@ function listMessages(scrollFlag){ $('#message_log').load(base_dir+'/chat_list',
 function periodicallyListMessagesCallback(){ var scrollFlag = isScrolledToBottom(); listMessages(scrollFlag); }
 
 function get_input(){
-    replace_all_html_emoticons();
-    return $('div#message_text')[0].innerText;
+    var input = replace_all_html_emoticons($('div#message_text'))[0].innerText;
+    return input;
 }
 
 // allow message sending
@@ -89,9 +89,12 @@ function send_message(){
 }
 
 // replace all HTML emoticons with textual emoticons before sending, to preserve them
-function replace_all_html_emoticons(){
+function replace_all_html_emoticons(text_element){
+
+    var working_copy = text_element.clone();
+
     // emoticon's img elements
-    var imgs = $('#message_text img[class="emoticon"]');
+    var imgs = working_copy.find('img[class="emoticon"]');
     imgs.each(function () {
         var html_emoticon_element = $(this);
         replace_html_emoticon(html_emoticon_element);
@@ -101,6 +104,8 @@ function replace_all_html_emoticons(){
     function replace_html_emoticon(html_emoticon_element){
         html_emoticon_element.replaceWith('('+html_emoticon_element.attr('alt')+')');
     }
+
+    return working_copy;
 }
 
 // textual emoticon to HTML emoticon

@@ -38,17 +38,19 @@ input#sender{
     width: calc(100vw - 1.1em);
 }
 #edit_tools, #send{
-    float:left;
+    border: 1px dotted black;
+    margin: 3px;
 }
-/* min-width, max-width: 100vw - (#edit_tools.width + #send.width + 0.1em) */
 #message_text{
-    min-width: calc(100vw - 3.1em);
-    max-width: calc(100vw - 3.1em);
+
     min-height: 1.5em;
-    float:left;
 
     white-space: pre-wrap;
     word-wrap: break-word;
+}
+table, tr, td {
+    vertical-align: top;
+    padding: 0;
 }
 .line *, .line {
     white-space: pre-wrap;
