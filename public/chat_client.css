@@ -39,10 +39,10 @@ input#sender{
 }
 #edit_tools, #send{
     border: 1px dotted black;
-    margin: 3px;
+    margin: 0.1em;
 }
 #message_text{
-
+    max-width: 65vw;
     min-height: 1.5em;
 
     white-space: pre-wrap;
@@ -60,7 +60,7 @@ table, tr, td {
     border-bottom:  solid;
 }
 #edit_tools, #send, .emoticon{
-    width: 1.2em;
-    height: 1.2em;
+    width: 13vw;
+    height: 13vw;
     padding: 0.1em;
 }

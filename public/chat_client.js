@@ -21,7 +21,7 @@ $(function(){
 
     $('#message_text').on('input', on_input);
     $('#edit_tools').click(()=>{
-        $('#message_text').html($('#message_text').html()+'(smile)');
+        $('#message_text').text($('#message_text').text()+':smile:');
         $('#message_text').trigger('input');
     });
 
@@ -34,6 +34,7 @@ $(function(){
 
     $.get('user_logged', function(data) {
         $('#user').text(data);
+        if(data=='') location = '..';
     })
     .fail(function() {
       alert( "error! (when loading 'logged user')" );
@@ -102,7 +103,7 @@ function replace_all_html_emoticons(text_element){
 
     // replace HTML emoticon with textual emoticon
     function replace_html_emoticon(html_emoticon_element){
-        html_emoticon_element.replaceWith('('+html_emoticon_element.attr('alt')+')');
+        html_emoticon_element.replaceWith(html_emoticon_element.attr('alt'));
     }
 
     return working_copy;
@@ -110,19 +111,19 @@ function replace_all_html_emoticons(text_element){
 
 // textual emoticon to HTML emoticon
 function textual_emoticon_to_html_emoticon(textual_emoticon_text){
-    // example HTML emoticon : '<img src="img/ico/mail.png" class="emoticon" alt="mail">'
+    // example HTML emoticon : '<img src="img/ico/mail.png" class="emoticon" alt=":mail:">'
     var mapping = ico_mapping;
     var textual_emoticon_type = textual_emoticon_text.slice(1,-1);
     var src = mapping[textual_emoticon_type];
     // for invalid mappings...
     if(typeof src == 'undefined') return textual_emoticon_text;
-    var html = '<img src="img/ico/'+src+'" class="emoticon" alt="'+textual_emoticon_type+'">';
+    var html = '<img src="img/ico/'+src+'" class="emoticon" alt="'+textual_emoticon_text+'">';
     return html;
 }
 
 // parse all textual emoticons expressions found in message to send
 function parse_emoticons_expressions(string){
-    return string.replace(/(\(\w+\))/gi, textual_emoticon_to_html_emoticon);
+    return string.replace(/(:\w+:)/gi, textual_emoticon_to_html_emoticon);
 }
 
 function escapeRegExp(str) {
@@ -138,8 +139,8 @@ function replace_all(string, replace_what, replace_with){
 
 function replace_smileys(input){
     var mappings = [
-        [':)', '(smile)'],
-        ['<3', '(heart)'],
+        [':)', ':smile:'],
+        ['<3', ':heart:'],
     ];
     for(mapping of mappings){
         input = replace_all(input, mapping[0], mapping[1]);
