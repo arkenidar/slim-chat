@@ -14,13 +14,22 @@ const base_dir = window.location.pathname.split('/').slice(0,-1).join('/');
 // on ready
 $(function(){
 
-    // stay updated
-    setInterval(periodicallyListMessagesCallback, 3000); // get messages periodically
-
+    // SETUP MESSAGE SENDING
+    setup_emoticons();
+    $('#message_text').on('input', on_input);
     $('#send').click(send_message);
 
-    $('#message_text').on('input', on_input);
+    // SETUP TIMEOUTS
+    // enforce user being logged in
+    enforce_user_login();
+    setInterval(enforce_user_login, 5000);
+    // get messages
+    periodicallyListMessagesCallback()
+    setInterval(periodicallyListMessagesCallback, 3000);
 
+});
+
+function setup_emoticons() {
     $.ajax({
         url: 'ico_mapping.json',
         success: function(data) {
@@ -31,15 +40,20 @@ $(function(){
           alert( "error! (when loading icons's mapping)" );
         }
     });
+}
 
+function enforce_user_login(){
     $.get('user_logged', function(data) {
         $('#user').text(data);
-        if(data=='') location = '..';
+        if(data=='') {
+            alert('user logged out automatically by a timeout. login again, please.');
+            location = '..';
+        }
     })
     .fail(function() {
       alert( "error! (when loading 'logged user')" );
     });
-});
+}
 
 function setup_emoticon_palette() {
     // emoticon palette / creation of its HTML
