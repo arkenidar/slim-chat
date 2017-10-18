@@ -21,7 +21,7 @@ form#send_message_form {
     max-height: 100vh;
 }
 #message_log{
-    padding-bottom: 3.5em;
+    padding-bottom: calc(2em + 13vw);
 }
 body{
     margin: 0;

@@ -43,7 +43,7 @@ $(function(){
 
 // chat scrolling
 function scrollHeight(){ return $(document).height()-$(window).height(); }
-function isScrolledToBottom(){ return $('html')[0].scrollTop == scrollHeight(); }
+function isScrolledToBottom(){ return (Math.abs($('html')[0].scrollTop - scrollHeight())<5); }
 function scrollToBottom(){ $('html')[0].scrollTop = scrollHeight(); }
 
 // message listing
