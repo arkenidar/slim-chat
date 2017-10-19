@@ -58,7 +58,7 @@ $app->get('/chat_list', function (Request $request, Response $response) {
 });
 
 function user(){
-    session_start();
+    @session_start();
     return @$_SESSION["user-tavatar"];
 }
 
