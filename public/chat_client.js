@@ -33,7 +33,7 @@ function setup_emoticons() {
             setup_emoticon_palette();
         },
         fail: function() {
-          alert( "error! (when loading icons's mapping)" );
+          alert( "Error! when loading: icons's mapping" );
         }
     });
 }
@@ -42,12 +42,12 @@ function enforce_user_login(){
     $.get('user_logged', function(data) {
         $('#user').text(data);
         if(data=='') {
-            alert('user logged out automatically by a timeout. login again, please.');
+            alert('The user is logged out. Login, please.');
             location = '..';
         }
     })
     .fail(function() {
-      alert( "error! (when loading 'logged user')" );
+      alert( "Error! when loading: logged user info" );
     });
 }
 
