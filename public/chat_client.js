@@ -13,16 +13,12 @@ const base_dir = window.location.pathname.split('/').slice(0,-1).join('/');
 
 // on ready
 $(function(){
-
+    // enforce user being logged in
+    enforce_user_login();
     // SETUP MESSAGE SENDING
     setup_emoticons();
     $('#message_text').on('input', on_input);
     $('#send').click(send_message);
-
-    // SETUP TIMEOUTS
-    // enforce user being logged in
-    enforce_user_login();
-    setInterval(enforce_user_login, 5000);
     // get messages
     periodicallyListMessagesCallback()
     setInterval(periodicallyListMessagesCallback, 3000);
