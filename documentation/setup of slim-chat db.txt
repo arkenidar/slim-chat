@@ -1,0 +1,12 @@
+
+# Configure db type and password
+In the file slim-chat/src/util/pdo_conf.php edit:
+define('mysql_password', 'password');
+define('pdo_db_type', 'mysql');
+or
+define('pdo_db_type', 'sqlite');
+etc
+
+# Setup database tables
+call from the browser the URL (or equivalent URL)
+http://localhost/slim-chat/util/db_setup

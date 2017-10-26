@@ -24,3 +24,9 @@ sudo apt install php-sqlite3 && sudo service apache2 restart
 
 # to install the LAMP STACK on Ubuntu (for using Apache, in place of PHP's built-in server):
 https://sites.google.com/site/dariocangialosi/linuxapachemysqlphp-lamp-on-ubuntu
+
+# for further documentation
+
+https://gist.github.com/adamstac/7462202
+https://www.digitalocean.com/community/tutorials/how-to-secure-apache-with-let-s-encrypt-on-ubuntu-16-04
+and the slim-chat/documentation directory

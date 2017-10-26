@@ -1,0 +1,14 @@
+$ sudo a2enmod rewrite
+$ sudo nano /etc/apache2/sites-available/000-default.conf
+
+#Below "DocumentRoot /var/www/html" add the following lines:
+<Directory "/var/www/html">
+AllowOverride All
+Require all granted
+Options +Indexes +MultiViews +FollowSymLinks
+</Directory>
+
+$ sudo service apache2 restart
+
+
+$ ln -s /home/user/src/github/slim-chat/public /var/www/html/slim-chat
