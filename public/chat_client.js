@@ -20,8 +20,8 @@ $(function(){
     $('#message_text').on('input', on_input);
     $('#send').click(send_message);
     // get messages
-    periodicallyListMessagesCallback()
-    setInterval(periodicallyListMessagesCallback, 3000);
+    periodically_list_messages_callback()
+    setInterval(periodically_list_messages_callback, 3000);
 
 });
 
@@ -90,13 +90,13 @@ function setup_emoticon_palette() {
 }
 
 // chat scrolling
-function scrollHeight(){ return $(document).height()-$(window).height(); }
-function isScrolledToBottom(){ return (Math.abs($('html')[0].scrollTop - scrollHeight())<5); }
-function scrollToBottom(){ $('html')[0].scrollTop = scrollHeight(); }
+function scroll_height(){ return $(document).height()-$(window).height(); }
+function is_scrolled_to_bottom(){ return (Math.abs($('html')[0].scrollTop - scroll_height())<5); }
+function scroll_to_bottom(){ $('html')[0].scrollTop = scroll_height(); }
 
 // message listing
-function listMessages(scrollFlag){ $('#message_log').load(base_dir+'/chat_list', function(){ if(scrollFlag) scrollToBottom(); } ) }
-function periodicallyListMessagesCallback(){ var scrollFlag = isScrolledToBottom(); listMessages(scrollFlag); }
+function list_messages(scrollFlag){ $('#message_log').load(base_dir+'/chat_list', function(){ if(scrollFlag) scroll_to_bottom(); } ) }
+function periodically_list_messages_callback(){ var scrollFlag = is_scrolled_to_bottom(); list_messages(scrollFlag); }
 
 function get_input(){
     var input = replace_all_html_emoticons($('div#message_text'))[0].innerText;
@@ -175,13 +175,13 @@ function parse_emoticons_expressions(string){
     return string.replace(/(:\w+:)/gi, textual_emoticon_to_html_emoticon);
 }
 
-function escapeRegExp(str) {
+function escape_regexp(str) {
   return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 }
 
 function replace_all(string, replace_what, replace_with){
     return string.replace(
-        new RegExp(escapeRegExp(replace_what), 'gi'),
+        new RegExp(escape_regexp(replace_what), 'gi'),
         replace_with
     );
 }
@@ -197,7 +197,7 @@ function replace_smileys(input){
     return input;
 }
 
-function placeCaretAtEnd(el) {
+function place_caret_at_the_end(el) {
     el.focus();
     if (typeof window.getSelection != "undefined"
             && typeof document.createRange != "undefined") {
@@ -215,7 +215,7 @@ function placeCaretAtEnd(el) {
     }
 }
 
-function escapeHtml(text) {
+function escape_html(text) {
     'use strict';
     return text.replace(/[\"&<>]/g, function (a) {
         return { '"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;' }[a];
@@ -225,10 +225,10 @@ function escapeHtml(text) {
 function on_input(inputEvent){
     var input = get_input();
     input = replace_smileys(input);
-    input = escapeHtml(input);
+    input = escape_html(input);
     var new_html = parse_emoticons_expressions(input);
     if(new_html!=null){
         $(this).html(new_html);
-        placeCaretAtEnd($(this)[0]);
+        place_caret_at_the_end($(this)[0]);
     }
 }
