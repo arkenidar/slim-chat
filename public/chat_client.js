@@ -129,7 +129,8 @@ function send_message(){
         $('div#message_text').html('');
     })
     .fail(function(){ // error handling
-        alert('Error! (when sending a message)');
+        alert('Error when sending a message!');
+        enforce_user_login();
     })
     .always(function(){
         // enable form on post-submit
