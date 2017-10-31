@@ -15,8 +15,7 @@ const base_dir = window.location.pathname.split('/').slice(0,-1).join('/');
 $(function(){
     // enforce user being logged in
     const allow_anonymous_user = true;
-    if(!allow_anonymous_user)
-      enforce_user_login();
+    enforce_user_login(allow_anonymous_user);
     // SETUP MESSAGE SENDING
     setup_emoticons();
     $('#message_text').on('input', on_input);
@@ -40,10 +39,10 @@ function setup_emoticons() {
     });
 }
 
-function enforce_user_login(){
+function enforce_user_login (allow_anonymous_user) {
     $.get('user_logged', function(data) {
         $('#user').text(data);
-        if(data=='') {
+        if(data=='' && !allow_anonymous_user) {
             alert('The user is logged out. Login, please.');
             location = '..';
         }
