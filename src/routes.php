@@ -41,7 +41,7 @@ require 'util/links.php';
 // list messages
 $app->get('/chat_list', function (Request $request, Response $response) {
     // OUT: $messages
-    $messages = pdo_execute('SELECT * FROM (SELECT * FROM chat_messages ORDER BY creation_timestamp DESC LIMIT 15) AS res ORDER BY creation_timestamp ASC');
+    $messages = pdo_execute('SELECT * FROM (SELECT * FROM messagging.chat_messages ORDER BY creation_timestamp DESC LIMIT 15) AS res ORDER BY creation_timestamp ASC');
     // - produce HTML output
     // IN: $messages OUT: $output
     $style = $request->getQueryParam('style', false);
@@ -73,12 +73,16 @@ $app->post('/chat_send', function (Request $request, Response $response) {
     // - SQL chat send
     // IN: $message
     $message['sender'] = user();
-    if($message['sender']=='') {
-        $message['sender'] = 'not authenticated sender user';
+    $allow_anonymous_user = true;
+    if(!$allow_anonymous_user && $message['sender']=='') {
         return $response->withStatus(401); // HTTP Status: 401 (UnAuthorized)
+    }else{
+        if($message['sender']=='') {
+            $message['sender'] = 'not authenticated sender user';
+        }
+        pdo_execute('INSERT INTO messagging.chat_messages (message_text, sender) VALUES (:message_text, :sender)', $message);
+        return $response->withStatus(200);
     }
-    pdo_execute('INSERT INTO chat_messages (message_text, sender) VALUES (:message_text, :sender)', $message);
-    return $response->withStatus(200);
 });
 
 $app->get('/user_logged', function (Request $request, Response $response){

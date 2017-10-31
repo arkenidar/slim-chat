@@ -14,7 +14,9 @@ const base_dir = window.location.pathname.split('/').slice(0,-1).join('/');
 // on ready
 $(function(){
     // enforce user being logged in
-    enforce_user_login();
+    const allow_anonymous_user = true;
+    if(!allow_anonymous_user)
+      enforce_user_login();
     // SETUP MESSAGE SENDING
     setup_emoticons();
     $('#message_text').on('input', on_input);

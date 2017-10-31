@@ -22,12 +22,12 @@ function pdo(){
 			break;
 
 		case 'postgres':
-			$db_url = 'pgsql:host=localhost; dbname=messaging';
+			$db_url = 'pgsql:host=localhost';
 			$pdo = new PDO($db_url, 'postgres', postgres_password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION] );
 			break;
 
 		case 'mysql':
-			$db_url = 'mysql:host=localhost; dbname=messaging';
+			$db_url = 'mysql:host=localhost';
 			$pdo = new PDO($db_url, 'root', mysql_password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION] );
 			break;
 	}
@@ -38,11 +38,12 @@ function pdo(){
 $pdo = pdo();
 
 function pdo_setup_db_sql(){
-	$postgres_or_mysql = 'CREATE TABLE IF NOT EXISTS chat_messages (
+	$postgres_or_mysql = 'CREATE DATABASE IF NOT EXISTS messagging;
+	  CREATE TABLE IF NOT EXISTS messagging.chat_messages (
       id SERIAL PRIMARY KEY NOT NULL,
       message_text TEXT NOT NULL,
       sender TEXT NOT NULL,
-      creation_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL )';
+      creation_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL );';
 	$setup_db_sql = [
 	'sqlite' => 'CREATE TABLE IF NOT EXISTS chat_messages (
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
